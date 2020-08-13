@@ -1,0 +1,8 @@
+./referrenz/
+*.aux
+*.log
+*.fls
+*.synctex.gz
+*.toc
+*.fdb_latexmk
+*.out

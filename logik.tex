@@ -1,0 +1,973 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{stmaryrd}
+\usepackage[ngerman]{babel}
+
+\usepackage{bussproofs} % Deduktionsbäume
+\usepackage{sfmath}
+
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
+\newcommand{\ninf}{\sum_{n=0}^\infty}
+\newcommand{\ksum}[2]{\sum_{k=#1}^#2}
+\newcommand{\limes}[2]{\lim_{#1 \rightarrow #2}}
+\newcommand{\ra}{\rightarrow}
+\newcommand{\RA}{\Rightarrow}
+\newcommand{\LR}{\Leftrightarrow}
+\newcommand{\integral}[1]{\int #1 \,\mathrm{d}x}
+\newcommand{\Integral}[3]{\int_{ #1 }^{ #2 } #3 \,\mathrm{d}x}
+\newcommand{\real}{\mathbb{R}}
+\newcommand{\mat}[1]{\begin{pmatrix}#1 \end{pmatrix}}
+\newcommand{\ls}{\newline\newline}
+\newcommand{\diff}[2]{\frac{ \partial #1 }{ \partial #2 } }
+\newcommand{\intervall}{\mathcal{I}}
+\newcommand{\logicand}{\wedge}
+\newcommand{\logicor}{\vee}
+\title{Zusammenfassung - Logik und Logikprogrammierung}
+\date{\today}
+\author{Marcus Faulstich}
+
+\newcommand{\define}[1]{\section{\blue{Definition #1}}}
+\newcommand{\satz}[1]{\section{\green{Satz #1}}}
+\newcommand{\lemm}[1]{\section{\green{Lemma #1}}}
+
+\usepackage{hyperref}                   % hyperlinks
+\hypersetup{
+    colorlinks=true,
+    linktoc=all,
+    linkcolor=black
+}
+
+\usepackage{fancyhdr}                   % Inhaltsverzeichnis
+\pagestyle{fancy}                       % im Footer
+\renewcommand{\headrulewidth}{0pt}
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \cfoot{\hyperlink{contents}{\textbf{Inhaltsverzeichnis}}}
+}
+\fancyhf{}
+\cfoot{\hyperlink{contents}{\textbf{Inhaltsverzeichnis}}}
+
+
+\renewcommand{\familydefault}{\sfdefault}   % sans serif font
+
+% Highlighting Macros
+\newcommand{\red}[1]{\textcolor[rgb]{0.9,0.2,0.2}{#1}}
+\newcommand{\green}[1]{\textcolor[rgb]{0.1,0.6,0.1}{#1}}
+\newcommand{\blue}[1]{\textcolor[rgb]{0.2,0.2,1}{#1}}
+
+\begin{document}
+\maketitle
+\hypertarget{contents}{}
+\tableofcontents
+
+\chapter{Aussagenlogik}
+
+\define{Atomare Formeln}
+Eine \red{atomare Formel} hat die Form $ p_i $. Diese Formeln werden durch folgenden Induktiven Prozess definiert:
+\begin{itemize}
+    \item Alle atomaren Formeln und $ \perp $ sind Formeln
+    \item Falls $ \varphi $ und $ \psi  $ Formeln sind, sind auch $ (\varphi \logicand \psi),~ (\varphi \logicor \psi),~ (\varphi \ra \psi) $ und $ \lnot \varphi $ Formeln
+    \item Nichts ist Formel, was sich nicht mittels dieser Regeln erzeugen lässt
+\end{itemize}
+\textbf{Bezeichungen: }
+\begin{itemize}
+    \item Falsum: $ \perp $
+    \item Konjunktion: $ \logicand $
+    \item Disjunktion: $ \logicor $
+    \item Einseitige Implikation: $ \ra $
+    \item Gegenseitige Implikation: $ \leftrightarrow $
+    \item Negation: $ \lnot $
+\end{itemize}
+\textbf{Präzedenz der Operatoren:}
+\begin{align*}
+    \leftrightarrow &~ \textnormal{bindet am stärksten}\\
+    \ra & \dots\\\logicor & \dots\\\logicand & \dots\\
+    \lnot &~ \textnormal{bindet am stärksten}
+\end{align*}
+
+\section{\blue{Natürliches Schließen}}
+Ein mathematischer Beweis zeigt, wie die Behauptung aus den Voraussetzungen folgt. Analog zeigt ein \textbf{Beweisbaum} (\textit{Herleitung, Deduktion}), wie eine Formel aus anderen Formeln folgt.
+\ls
+Diese Deduktionen sind Bäume, deren Knoten mit Formeln beschriftet sind.
+\begin{itemize}
+    \item an den Blättern stehen Voraussetzungen (\red{Hypothesen})
+    \item an den inneren Knoten stehen Teilergebnisse und Begründungen
+    \item an der Wurzel steht die Behauptung (\red{Konklusion})
+\end{itemize}
+\section{\blue{Konstruktion von Deduktionen}}
+\subsection{\green{Konjuktionseinführung/-elimination}}
+\begin{prooftree}
+\AxiomC{$ \varphi $}
+\AxiomC{$ \psi $}
+\BinaryInfC{$ \varphi \logicand \psi $}
+\end{prooftree}
+\begin{center}
+    \begin{minipage}{0.2\linewidth}
+        \begin{prooftree}
+            \AxiomC{$ \varphi \logicand \psi $}
+            \UnaryInfC{$ \varphi $}
+        \end{prooftree}
+    \end{minipage}
+    \begin{minipage}{0.2\linewidth}
+        \begin{prooftree}
+            \AxiomC{$ \varphi \logicand \psi $}
+            \UnaryInfC{$ \psi $}
+        \end{prooftree}
+    \end{minipage}
+\end{center}
+\subsection{\green{Implikationseinführung/-elimination}}
+\begin{prooftree}
+    \AxiomC{$ [\varphi] $}
+    \noLine
+    \UnaryInfC{$ \vdots $}
+    \noLine
+    \UnaryInfC{$ \psi $}
+    \UnaryInfC{$ \varphi \ra \psi $}
+\end{prooftree}
+
+\begin{prooftree}
+    \AxiomC{$ \varphi $}
+    \AxiomC{$ \varphi \ra \psi $}
+        \BinaryInfC{$ \psi $}
+\end{prooftree}
+\subsection{\green{Disjunktionseinführung/-elimination}}
+\begin{center}
+    \begin{minipage}{0.2\linewidth}
+        \begin{prooftree}
+            \AxiomC{$ \varphi $}
+            \UnaryInfC{$ \varphi \logicor \psi $}
+        \end{prooftree}
+    \end{minipage}
+    \begin{minipage}{0.2\linewidth}
+        \begin{prooftree}
+            \AxiomC{$ \psi $}
+            \UnaryInfC{$ \varphi \logicor \psi $}
+        \end{prooftree}
+    \end{minipage}
+\end{center}
+\begin{prooftree}
+    \AxiomC{$ \varphi \logicor \psi $}
+    \AxiomC{$ [\varphi] $}
+        \noLine
+        \UnaryInfC{$ \vdots $}
+        \noLine
+        \UnaryInfC{$ \sigma $}
+    \AxiomC{$ [\psi] $}
+        \noLine
+        \UnaryInfC{$ \vdots $}
+        \noLine
+        \UnaryInfC{$ \sigma $}
+    \TrinaryInfC{$ \sigma $}
+\end{prooftree}
+\subsection{\green{Negationseinführung/-elimination}}
+\begin{prooftree}
+    \AxiomC{$ [\varphi] $}
+    \noLine
+    \UnaryInfC{$ \vdots $}
+    \noLine
+    \UnaryInfC{$ \perp $}
+    \UnaryInfC{$ \lnot \varphi $}
+\end{prooftree}
+\begin{prooftree}
+    \AxiomC{$ \lnot \varphi $}
+    \AxiomC{$ \varphi $}
+    \BinaryInfC{$ \perp $}
+\end{prooftree}
+\subsection{\green{Reductio ad absurdum}}
+\begin{prooftree}
+    \AxiomC{$ [\lnot \varphi] $}
+    \noLine
+    \UnaryInfC{$ \vdots $}
+    \noLine
+    \UnaryInfC{$ \perp $}
+    \UnaryInfC{$ \varphi $}
+\end{prooftree}
+
+\define{Syntaktische Folgerung, Theorem}
+Für eine Formelmenge $ \Gamma $ und eine Formel $ \varphi $ schreiben wir
+\[
+    \Gamma ~\red \vdash ~\varphi
+\]
+wenn es eine Deduktion gibt mit Hypothesen aus $ \Gamma $ und Konklusion $ \varphi $. Wir sagen "$ \varphi $ ist eine \red{syntaktische Folgerung} von $ \Gamma $"\ls
+Eine Formel $ \varphi $ ist ein \red{Theorem}, wenn $ \emptyset ~ \vdash ~ \varphi $ gilt.
+\satz{}
+Für alle Formeln $ \varphi $ und $ \psi $ gelten
+\[
+    \{\lnot (\varphi \logicor \psi)\} ~ \vdash ~ \lnot \varphi \logicand \lnot \psi
+\]
+\[
+    \{\lnot \varphi \logicand \lnot \psi \}~ \vdash ~ (\lnot \varphi \vee \psi)
+\]
+\[
+    \{\lnot \varphi \vee \lnot \psi\} ~ \vdash ~ \lnot(\varphi \wedge \psi)
+\]
+\[
+    \{\lnot (\varphi \wedge \psi) ~\vdash~ \lnot \varphi \vee \lnot \psi\}
+\]
+\define{Wahrheitswertemengen}
+\begin{itemize}
+    \item \red{Boolsche Logik} $ B = \{0,1\} $
+    \item \red{Kleene-Logik} $ K_3 = {0,\frac{ 1 }{ 2 } , 1} $
+    \item \red{Fuzzy-Logik} $ F = [0,1] $
+    \item \red{unendl. Boolsche Logik} $ B_\real =  $ Menge der Teilmengen von $ \real $
+    \item \red{Heyting-Algebra} $ H_\real =$ Menge der offenen Teilmengen von $ \real $
+\end{itemize}
+\define{W-Belegung}
+Sei $ W $ eine Menge von Wahrheitswerten. Eine \red{$W $-Belegung} ist eine Abbildung $ \mathcal{B}:~ V \ra W $, wobei $ V \subseteq \{p_0, p_1,\dots\} $ eine Menge atomarer Formeln ist.\ls
+Die $ W $-Belegung $ \mathcal{B}:~ V \ra W $ \red{\textit{passt}} zur Formel $ \varphi $, falls alle atomaren Formeln aus $ \varphi $ zu $ V $ gehören.\ls
+Sei $ W $ ein Wahrheitswertebereich und $\mathcal{B}$ eine $ W $-Belegung. Induktiv über den Formelaufbau definieren wir den Wahrheitswert $ \red{\hat{\mathcal{B}}(\varphi)} \in W  $ jeder zu $ \mathcal{B} $ passenden Formel $ \varphi  $:
+\begin{center}
+    \begin{align*}
+        \hat{\mathcal{B}}(\perp) &= 0_W\\[1em]
+        \hat{\mathcal{B}}(p) &= \mathcal{B}(p) \qquad \textnormal{falls $ p $ atomare Formel}\\[1em]
+        \hat{\mathcal{B}}(\varphi \wedge \psi) &= \hat{\mathcal{B}}(\varphi) \wedge_W \hat{\mathcal{B}}(\psi)\\[1em]
+        \hat{\mathcal{B}}(\varphi \vee\psi) &= \hat{\mathcal{B}}(\varphi) \vee_W \hat{\mathcal{B}}(\psi)\\[1em]
+        \hat{\mathcal{B}}(\varphi\ra \psi) &= \ra_W(\hat{\mathcal{B}}(\varphi),\hat{\mathcal{B}}(\psi))\\[1em]
+        \hat{\mathcal{B}}(\lnot\varphi) & = \lnot_W(\hat{\mathcal{B}}(\varphi))
+    \end{align*}
+\end{center}
+Im folgenden schreiben wir anstatt $ \hat{\mathcal{B}}(\varphi) $ nur $ \mathcal{B}(\varphi) $
+
+\define{Abbildungen von Wahrheitswerten}
+Sei $ W $ eine Menge und $ R \subseteq W \times W $ eine binäre Relation.
+\begin{itemize}
+    \item $ R $ ist \red{reflexiv}, wenn $ (a,a) \in R $ für alle $ a \in W $ gilt
+    \item $ R $ ist \red{antisymmetrisch}, wenn $ (a,b),(b,a) \in R $ impliziert, dass $ a = b $ gilt
+    \item $ R $ ist \red{transitiv}, wenn $ (a,b),(b,a) \in R $ impliziert, dass $ (a,c) \in R $ gilt
+    \item $ R $ ist eine \red{Ordnungsrelation}, wenn $ R $ reflexiv, antisymmetrisch und transitiv ist. In diesem Fall heißt das Paar $ (W,R) $ eine \red{partiell geordnete Menge}
+\end{itemize}
+\define{Schranken von Wahrheitswertemengen}
+Sei $ (W, \leq) $ partiell geordnete Menge, $ M \subseteq W $ und $ a \in W $.
+\begin{itemize}
+    \item $ a $ ist \red{obere Schranke von $ M $}, wenn $ m \leq a $ für alle $ m \in M $ gilt
+    \item $ a $ ist \red{kleinste obere Schranke} oder \red{Supremum von $ M $}, wenn $ a $ obere Schranke von $ M $ ist und wenn $ a \leq b $ für alle oberen Schranken $ b $ von $ M $ gilt
+    \item $ a $ ist \red{untere Schranke von $ M $}, wenn $ a \leq m $ für alle $ m \in M $ gilt
+    \item $ a $ ist \red{größte untere Schranke} oder \red{Infimum von M}, wenn $ a $ untere Schranke von $ M $ ist und wenn $ b \leq a  $ für alle unteren Schranken $ b $ von $ M $ gilt.
+\end{itemize}
+\define{Verband}
+Ein \red{(vollständiger) Verband} ist eine partiell geordnete Menge $ (W, \leq) $, in der jede Menge $ M \subseteq W $ ein Supremum und ein Infimum hat.\ls
+In einem Verband $ (W,\leq) $ definieren wir:
+\begin{itemize}
+    \item \red{$ 0_W $}$ = \inf W $ und $ \red{1_W} = \sup W $
+    \item $ a \red{\wedge_W} b = \inf{a,b} $ und $ a \red{\vee_W} b = \sup{a,b} $ für $ a,b \in W $
+\end{itemize}
+\define{Wahrheitswertebereiche}
+Ein \red{Wahrheitswertebereiche} ist ein Tupel $ (W, \leq, \ra_W, \lnot_W) $, wobei $ (W, \leq) $ ein Verband und $ \ra_W:~ W^2 \ra W $ und $ \lnot_W:~ W \ra W $ Funktionen sind
+
+\begin{itemize}
+    \item \red{Boolscher Wahrheitswertebereich $ B $}
+    \begin{align*}
+        \textnormal{Grundmenge: } & B = {0,1}
+        &\textnormal{Ordnung:}  \leq\\
+        & \red{\lnot_B}(a) = 1 - a & \red{\ra_B}(a,b) = \max(b, 1-a)\\
+        & \red{0_B} = 0 \qquad \red{1_B} = 1\\
+        & a \red{\wedge_B} b = \min(a,b) & a \red{\vee_B} b = \max(a,b)
+    \end{align*}
+    \item \red{Kleenescher Wahrheitswertebereich $ K_3 $}
+    \begin{align*}
+        \textnormal{Grundmenge: } & K_3 = \{0, \frac{ 1 }{ 2 } , 1\} & \textnormal{Ordnung: } \leq\\
+        & \red{\lnot_{K_3}}(a) = 1 - a & \red{\ra_{K_3}}(a,b) = \max(b,1-a)\\
+        & \red{0_{K_3}} = 0 \qquad \red{1_{K_3}} = 1\\
+        & a \red{\wedge_{K_3}} b = min(a,b) & a \red{\vee_{K_3}} b = \max(a,b)
+    \end{align*}
+    \item \red{Fuzzy-Wahrheitswertebereich}
+    \begin{align*}
+        \textnormal{Grundmenge: } & F = [0,1] & \textnormal{Ordnung: } \leq\\
+        &\red{\lnot_F}(a) = 1-a & \red{\ra_F} (a,b) = \max(b,1-a)\\
+        &\red{0_F} = 0 \qquad \red{1_F} = 1\\
+        &a \red{\wedge_F} b = \min(a,b) & a \red{\vee_F} b = \max(a,b)
+    \end{align*}
+    \item \red{unendl. Boolscher Wahrheitswertebereich}
+    \begin{align*}
+        \textnormal{Grundmenge: } & B_\real = \{A \mid A \subseteq \real\} & \textnormal{Ordnung: } \subseteq\\
+        &\red{\lnot_{B_\real}}(A) = \real \backslash A & \red{\ra_{B_\real}} (A,B) = B \cup \real \backslash A\\
+        &\red{0_{B_\real}} = \emptyset \qquad \red{1_{B_\real}} = \real\\
+        &A \red{\wedge_{B_\real}} B = A \cap B & A \red{\vee_{B_\real}} B = A \cup B
+    \end{align*}
+    \item \red{Heytingscher Wahrheitswertebereich}
+    \begin{align*}
+        \textnormal{Grundmenge: } & H_\real = \{A \subseteq \real \mid A \textnormal{ ist offen}\} & \textnormal{Ordnung: } \subseteq\\
+        &\red{\lnot_{H_\real}}(A) = \textnormal{Inneres}(\real \backslash A) & \red{\ra_{H_\real}} (A,B) = \textnormal{Inneres}(B \cup \real \backslash A)\\
+        &\red{0_{H_\real}} = \emptyset \qquad \red{1_{H_\real}} = \real\\
+        &A \red{\wedge_{H_\real}} B = A \cap B  & A \red{\vee_{H_\real}} B = A \cup B
+    \end{align*}
+\end{itemize}
+
+\define{Semantische Folgerung, Tautologie}
+Sei $ W $ ein Wahrheitswertebereich.\newline
+Eine Formel $ \varphi $ heißt eine \red{$ W $-Folgerung} der Formelmenge $ \Gamma $, falls für jede $ W $-Belegung $ \mathcal{B} $, die zu allen Formeln aus $ \Gamma \cup \{\varphi\} $ passt, gilt:
+\[
+    \inf\{\mathcal{B}(\gamma) \mid \gamma \in \Gamma\} \leq \mathcal{B}(\varphi)
+\]
+Wir schreiben \red{$ \Gamma \vDash_W \varphi $}, falls $ \varphi $ eine $ W $-Folgerung von $ \Gamma $ ist.\ls
+Eine \red{$ W$-Tautologie}  ist eine Formel $ \varphi $ mit $ \emptyset \vDash_W \varphi $, d.h. $ \mathcal{B}(\varphi) = 1_W $ für alle passenden $ W$-Belegungen.
+
+\subsection{\green{Korrektheitslemma für natürliches Schließen in $B$}}
+Sei $ D $ eine Deduktion mit Hypothesen in der Menge $ \Gamma $ und Konklusion $ \varphi $. Dann gilt
+\[
+    \Gamma \vDash_B \varphi \quad \textnormal{ d.h. } \quad \inf\{\mathcal{B}(\gamma) \mid \gamma \in \Gamma\} \leq \mathcal{B}(\gamma)
+\]
+für alle passenden $ B $-Belegungen $ \mathcal{B} $.
+\subsection{\green{Korrektheitssatz für natürliches Schließen in $B$}}
+Für jede Menge von Formeln $ \Gamma $ und jede Formel $ \varphi $ gilt
+\[
+    \Gamma \vdash \varphi ~\RA~ \Gamma \vDash_B \varphi
+\]
+\paragraph{Korollar} Jedes Theorem ist eine $ B $-Tautologie.
+
+\subsection{\green{Korrektheitssatz für natürliches Schließen in $ B_\real $}}
+Für jede Menge von Formeln $ \Gamma $ und jede Formel $ \varphi $ gilt
+\[
+    \Gamma \vdash \varphi ~\RA~ \Gamma \vDash_{B_\real} \varphi
+\]
+\paragraph{Korollar} Jedes Theorem ist eine $ B_\real $-Tautologie.
+
+\subsection{\green{Korrektheitssatz für natürliches Schließen in $ H_\real $}}
+Für jede Menge von Formeln $ \Gamma $ und jede Formel $ \varphi $ gilt
+\[
+    \Gamma \vdash \varphi \textnormal{ ohne (raa)} ~\RA~ \Gamma \vDash_{H_\real} \varphi
+\]
+\paragraph{Korollar} Jedes (raa)-freie Theorem ist eine $ H_\real $-Tautologie.
+
+\define{Konsistente Mengen}
+Sei $ \Gamma $ eine Menge von Formeln. $ \Gamma $ heißt \red{inkonsistent}, wenn $ \Gamma \vdash \perp $ gilt. Sonst heißt $ \Gamma $ \red{konsistent}.
+\subsection{\green{Lemma}}
+Sei $ \Gamma $ eine Menge von Formeln und $ \varphi $ eine Formel. Dann gilt
+\[
+    \Gamma \nvdash \varphi \Longleftrightarrow \Gamma \cup \{\lnot \varphi\} \textnormal{ konsistent}
+\]
+\subsection{\blue{Maximal Konsistente Mengen}}
+Eine Formelmenge $ \Delta $ ist \red{maximal konsistent}, wenn sie konsistent ist und wenn gilt
+\[
+    \Sigma \supseteq \Delta \textnormal{ konsistent} ~\RA~ \Sigma = \Delta
+\]
+\subsection{\green{Satz}}
+Jede konsistente Formelmenge $ \Gamma $ ist in einer maximal konsistenten Formelmenge $ \Delta $ enthalten.
+\subsection{\green{Lemma 1}}
+Sei $ \Delta $ maximal konsistent und gelte $ \Delta \vdash \varphi $. Dann gilt $ \varphi \in \Delta $.
+\subsection{\green{Lemma 2}}
+Sei $ \Delta $ maximal konsistent und $ \varphi $ Formel. Dann gilt
+\[
+    \varphi \notin \Delta ~\Longleftrightarrow~ \lnot \varphi \in \Delta
+\]
+\define{Erfüllbare Mengen}
+Sei $ \Gamma $ eine Menge von Formeln.\newline
+$ \Gamma $ heißt \red{erfüllbar}, wenn es passende $ B $-Belegungen $ \mathcal{B} $ gibt mit $ \mathcal{B}(\gamma) = 1_B $ für alle $ \gamma \in \Gamma $.
+\subsection{\green{Satz}}
+Sei $ \Delta $ eine maximal konsistente Menge von Formeln. Dann ist $ \Delta $ erfüllbar.
+\subsection{\green{Lemma}}
+Sei $ \Gamma $ eine Menge von Formeln und $ \varphi $ eine Formel. Dann gilt
+\[
+    \Gamma \nvDash_B \varphi ~\Longleftrightarrow~ \Gamma \cup \{\lnot \varphi\} \textnormal{ erfüllbar}
+\]
+\subsection{\green{Vollständigkeitssatz}}
+Sei $ \Gamma $ eine Menge von Formeln, $ \varphi $ eine Formel und $ W $ einer der Wahrheitswertebereiche $ B, K_3, F, B_\real, H_\real $. Dann gilt
+\[
+    \Gamma \vDash_W \varphi ~\RA~ \Gamma \vdash \varphi
+\]
+Insbesondere ist jede $ W $-Tautologie ein Theorem.
+
+\section{\blue{Vollständigkeit und Korrektheit}}
+\subsection{\green{Satz}}
+Seien $ \Gamma $ eine Menge von Formeln und $ \varphi $ eine Formel. Dann gilt
+\[
+    \Gamma \vdash \varphi ~\Leftrightarrow~ \Gamma \vDash_B \varphi
+\]
+Insbesondere ist eine Formel genau dann eine $ B $-Tautologie, wenn sie ein Theorem ist.
+\paragraph{Bemerkung} Gilt für jede Boolsche Algebra, also auch $ B_\real $, und für Heyting ohne (raa).
+\subsection{\blue{Definition Äquivalent}}
+Zwei Formeln $ \alpha, \beta $ heißen \red{äquivlent} ($ \alpha \red{\equiv} \beta $), wenn für alle passenden $ B $-Belegungen $ \mathcal{B} $ gilt:
+\[
+    \mathcal{B}(\alpha) = \mathcal{\beta}
+\]
+\subsection{\green{Zusammenhänge}}
+Seien $ \alpha, \beta $ zwei Formeln, dann gilt:
+\[
+    \alpha \equiv \beta ~\Leftrightarrow~ (\alpha \leftrightarrow \beta) \textnormal{ ist Theorem}
+\]
+\[
+    \alpha \textnormal{ ist Theorem} ~\Leftrightarrow~ \alpha \equiv \lnot\perp
+\]
+\subsection{\green{Kompaktheitssatz}}
+Sei $ \Gamma $ eine unter Umständen unendliche Menge von Formeln. Dann gilt
+\[
+    \Gamma \textnormal{ unerfüllbar} ~\Leftrightarrow~ \exists \Gamma' \subseteq \Gamma \textnormal{ endlich}:~ \Gamma' \textnormal{ unerfüllbar}
+\]
+\section{\blue{Erfüllbarkeitsproblem}}
+\begin{center}
+    \begin{align*}
+        &\textnormal{Eingabe: Formel } \gamma\\
+        &\textnormal{Frage: existiert eine $ B $-Belegung $ \mathcal{B} $ mit $ \mathcal{B}(\gamma) = 1_B$}
+    \end{align*}
+\end{center}
+Offensichtliche Lösung: probiere alle Belegungen durch (Wahrheitswertetabelle), jedoch exponentielle Zeit. Ziel ist also ein spezieller Algorithmus für syntaktisch eingeschränkte Formeln.
+\subsection{\blue{Definition Hornformeln}}
+Eine \red{Hornklausel} hat die Form
+\[
+    (\lnot \perp \wedge p_1 \wedge p_2 \wedge \dots \wedge p_n) \ra q
+\]
+für $ n \geq 0 $, atomare Formeln $ p_1,\dots,p_n $ und $ q $ atomare Formel oder $ q = \perp $.\ls
+Eine \red{Hornformel} ist eine Konjuktion von Hornklauseln der Form
+\[
+    \bigwedge_{1 \leq i \leq n} (M_i \ra q_i) \textnormal{ oder } \{(M_i \ra q_i) \mid 1 \leq i \leq n\}
+\]
+\subsection{\red{Markierungsalgorithmus}}
+\textbf{Eingabe:} endliche Menge $ \Gamma $ von Hornklauseln\newline
+\textbf{Ausgabe:} \{erfüllbar, unerfüllbar\}\newline
+\textbf{Algorithmus:}
+\begin{itemize}
+    \item[\blue{(1)}] Solange es eine Hornklausel $ M \ra q $ in $ \Gamma $ gibt, so dass alle $ p \in M $ markiert sind (oder $ M = \emptyset $) und $ q $ unmarkierte atomare Formel ist, dann markiere $ q $ in allen Hornklauseln
+    \item[\blue{(2)}] Wenn $ \Gamma $ eine Hornklausel der Form $ M \ra \perp $ enthält, in der alle $ p \in M $ markiert sind
+    \item[->] dann gebe ''überfüllbar'' aus
+    \item[->] ansonsten gebe ''erfüllbar'' aus
+\end{itemize}
+\subsection{\blue{Definition SLD-Resolution}}
+Sei $ \Gamma $ eine Menge von Hornklauseln. Eine \red{SLD-Resolution aus $ \Gamma $} ist eine Folge $ (M_0 \ra \perp, M_1 \ra \perp,\dots,M_m \ra \perp) $ von Hornklauseln mit
+\begin{itemize}
+    \item $ (M_0 \ra \perp) \in \Gamma $
+    \item für alle $ 0 \leq n < m $ existiert $ (N\ra q) \in \Gamma$ mit $ q \in M_n $ und $ M_{n+1} = M_n\backslash\{q\}\cup N$
+\end{itemize}
+
+\chapter{Prädikatenlogik}
+\section{\blue{Syntax der Prädikatenlogik}}
+\subsection{\blue{Definition Signatur}}
+Eine \red{Signatur} ist ein Tripel $ \Sigma = (\Omega, \texttt{Rel}, \texttt{ar})$, wobei $ \Omega $ und \texttt{Rel} disjunkte Mengen von \red{Funktions- und Relationsnamen} sind und $ \texttt{ar}:\Omega \cup \texttt{Rel} \ra \mathbb{N} $ eine Abbildung ist.
+\subsection{\blue{Definition $ \Sigma $-Terme}}
+Die \red{Menge der Variablen} ist $ \texttt{Var} = \{x_0,x_1,\dots\} $.\ls
+Sei $ \Sigma $ eine Signatur. Die Menge $ \red{T_\Sigma} $ der \red{$ \Sigma $-Terme} ist induktiv definiert:
+\begin{itemize}
+    \item Jede Variable ist ein Term, d.h. $ \texttt{Var} \subseteq T_\Sigma $
+    \item Ist $ f \in \Omega $ mit $ \texttt{ar}(f) =k$ und sind $ t_1,\dots,t_k \in T_\Sigma $, so gilt: $ f(t_1,\dots,t_k) \in T_\Sigma $
+    \item Nichts ist $ \Sigma $-Term, was sich nicht mittel der obigen Regeln erzeugen lässt.
+\end{itemize}
+\subsection{\blue{Definition Atomare $ \Sigma $-Formeln}}
+Sei $ \Sigma $ Signatur. Die \red{atomaren $ \Sigma $-Formeln} sind die Zeichenketten der Form
+\begin{itemize}
+    \item $ R(t_1,t_2,\dots,t_k) $ falls $ t_1,\dots,t_k \in T_\Sigma $ und $ R \in \texttt{Rel} $ mit $ \texttt{ar}(R) = k $ oder
+    \item $ t_1 = t_2 $, falls $ t_1, t_2 \in T_\Sigma $ oder
+    \item $ \perp $
+\end{itemize}
+\subsection{\blue{Induktive Definition $ \Sigma $-Formeln}}
+Sei $ \Sigma $ Signatur. \red{$ \Sigma $-Formeln} werden durch folgenden induktiven Prozess definiert:
+\begin{itemize}
+    \item Alle atomaren $ \Sigma $-Formeln sind $ \Sigma $-Formeln
+    \item Falls $ \varphi, \psi~ \Sigma$-Formeln, sind auch $ (\varphi \wedge \psi), (\varphi \vee \psi), (\varphi \ra \psi) $ $ \Sigma $-Formeln
+    \item Falls $ \varphi $ eine $ \Sigma $-Formel ist, ist auch $ \lnot \varphi $ eine $ \Sigma $-Formel
+    \item Falls $ \varphi $ eine $ \Sigma $-Formel und $ x \in \texttt{Var} $, so sind auch $ \forall x \varphi $ und $ \exists x \varphi $ $ \Sigma $-Formeln
+    \item Nichts, was sich nicht mittels der obigen Regeln erzeugen lässt, ist $ \Sigma $-Formel
+\end{itemize}
+Ist der Kontext klar, so sprechen wir einfach von \red{Termen, atomaren Formeln bzw. Formeln}.
+\subsection{\blue{Definition Freie Variablen}}
+Sei $ \Sigma $ eine Signatur. Die Menge \red{$ FV(\varphi) $} der \red{freien Variablen} eine $ \Sigma $-Formel $ \varphi $ ist induktiv definiert:
+\begin{itemize}
+    \item Ist $ \varphi $ atomare $ \Sigma $-Formel, so ist $ FV(\varphi) $ die Menge der in $ \varphi $ vorkommenden Variablen
+    \item $ FV(\varphi~\Box~ \psi) = FV(\varphi) \cup FV(\psi) $ für $ \Box \in \{\wedge, \vee, \ra\} $
+    \item $ FV(\lnot \varphi) = FV(\varphi) $
+    \item $ FV(\exists x \varphi) = FV(\forall x \varphi) = FV(\varphi)\setminus \{x\}  $
+\end{itemize}
+Eine Formel $ \varphi $ ist \red{geschlossen} oder ein \red{$ \Sigma $-Satz}, wenn $ FV(\varphi) = \emptyset $ gilt.
+
+\subsection{\blue{Definition $ \Sigma $-Struktur}}
+Sei $ \Sigma $ eine Signatur. Eine \red{$ \Sigma $-Struktur} ist ein Tupel $ \mathcal{A} = (U_\mathcal{A}, (f^\mathcal{A})_{f\in \Omega}, (R^\mathcal{A})_{R \in \texttt{Rel}}) $, wobei
+\begin{itemize}
+    \item $ U_\mathcal{A} $ ist eine nichtleere Menge, das \red{Universum}
+    \item $ R^\mathcal{A} \subseteq U^{\texttt{ar}(R)}_\mathcal{A} $ eine Relation der Stelligkeit $ ar(R) $ für $ R \in \texttt{Rel} $
+    \item $ f^\mathcal{A}: U^{\texttt{ar}(f)}_\mathcal{A} \ra U_\mathcal{A} $ eine Funktion der Stelligkeit $ \texttt{ar}(f) $ für $ f \in \Omega $
+\end{itemize}
+
+\subsection{\blue{Definition Variableninterpretation}}
+Im Folgenden sei $ \Sigma $ Signatur, $ \mathcal{A} $ Struktur und $ \rho: \texttt{Var} \ra U_\mathcal{A} $ eine Abbildung \red{(Variableninterpretation)}.\ls
+Die Abbildung \red{$ \rho': T_\Sigma \ra U_\mathcal{A} $} wird induktiv für $ t \in T_\Sigma $ definiert:
+\begin{itemize}
+    \item Ist $ t \in \texttt{Var} $, so setze $ \rho'(t) = \rho(t) $
+    \item Ansonsten existieren $ f \in \Omega $ mit $ \texttt{ar}(f) = k \textnormal{ und } t_1,\dots,t_k \in T_\Sigma $ mit $ t = f(t_1,\dots,t_k) $. Dann setze $ \rho'(t) = f^\mathcal{A}(\rho'(t_1),\dots,\rho'(t_k)) $
+\end{itemize}
+Die Abbildung $ \rho' $ ist die übliche ''Auswertungsabbildung''. Zur Vereinfachung wird anstelle von $ \rho'(t) $ auch $ \rho(t) $ geschrieben.
+
+\subsection{\green{Gültigkeit einer $ \Sigma $-Formel}}
+Für eine Formel $ \varphi $ definieren wir die Gültigkeit in einer Struktur $ \mathcal{A} $ unter der Variableninterpretation $ \rho $ (in Zeichen: \red{$ \mathcal{A} \vDash_\rho \varphi $}) induktiv:
+\begin{itemize}
+    \item $ \mathcal{A} \vDash_\rho \perp $ gilt nicht
+    \item $ \mathcal{A} \vDash_\rho R(t_1,\dots,t_k) $ falls $ (\rho(t_1),\dots, \rho(t_k)) \in R^\mathcal{A} $
+    \item $ \mathcal{A} \vDash_\rho t_1 = t_2 $ falls $ \rho(t_1) = \rho(t_2) $ für $ t_1, t_2 \in T_\Sigma $
+\end{itemize}
+Für Formeln $ \varphi, \psi $ und $ x \in \texttt{Var} $:
+\begin{itemize}
+    \item $ \mathcal{A} \vDash_\rho \varphi \wedge \psi \textnormal{ falls } \mathcal{A}\vDash_\rho \varphi \textnormal{ und } \mathcal{A}\vDash_\rho \psi $
+    \item $ \mathcal{A}\vDash_\rho \vee \psi $ falls $ \mathcal{A}\vDash_\rho \varphi $ oder $ \mathcal{A}\vDash_\rho \psi $
+    \item $ \mathcal{A}\vDash_\rho \varphi \ra \psi $ falls nicht $ \mathcal{A}\vDash_\rho \varphi $ oder $ \mathcal{A}\vDash_\rho \psi $
+    \item $ \mathcal{A}\vDash_\rho \lnot \varphi $ falls $ \mathcal{A}\vDash_\rho \varphi $ nicht gilt
+    \item $ \mathcal{A}\vDash_\rho \exists x \varphi $ falls \red{???}
+    \item $ \mathcal{A}\vDash_\rho \forall x \varphi $ falls \red{???}
+\end{itemize}
+Für $ x \in \texttt{Var} $ und $ a \in U_\mathcal{A}   $ sei \red{$ \rho[x \mapsto a]: \texttt{Var} \ra U_\mathcal{A} $} die Variableninterpretation, für die gilt:
+\[
+    (\rho[x \mapsto a])(y) = \begin{cases}
+        \rho(y) & \textnormal{falls } x \neq y\\
+        a & \textnormal{sonst}
+    \end{cases}
+\]
+\begin{itemize}
+    \item $ \mathcal{A}\vDash_\rho \exists x \varphi $ falls es $ a \in U_\mathcal{A} $ gibt mit $ \mathcal{A}\vDash_{\rho[x \mapsto a]} \varphi $
+    \item $ \mathcal{A}\vDash_\rho \forall x \varphi $ falls $ \mathcal{A}\vDash_{\rho[x \mapsto a]} \varphi $ für alle $ a \in U_\mathcal{A} $
+\end{itemize}
+
+
+\subsection{\blue{Definition Modell}}
+Sei $ \Sigma $ eine Signatur, $ \varphi $ eine Formel, $ \Delta $ eine Menge von Formeln und $ \mathcal{A} $ eine Struktur.\newline
+\red{$ \mathcal{A} \vDash \varphi $} ($ \mathcal{A} $ ist \red{Modell} von $ \varphi $), falls $ \mathcal{A} \vDash_\rho \varphi $ für alle Variableninterpretation $ \rho $ gilt.\newline
+\red{$ \mathcal{A} \vDash \Delta $}, falls  $ \mathcal{A} \vDash \psi $ für alle $ \psi \in \Delta $
+
+\section{\blue{Definiton Erfüllbarkeit, Allgemeingültigkeit, Folgerung}}
+Sei $ \Sigma $ eine Signatur, $ \varphi $ eine Formel, $ \Delta $ eine Menge von Formeln und $ \mathcal{A} $ eine Struktur.
+\begin{itemize}
+    \item $ \Delta $ ist \red{erfüllbar}, wenn es eine Struktur $ \mathcal{B} $ und Variableninterpretation $ \rho: \texttt{Var} \ra U_\mathcal{B} $ gibt mit $ \mathcal{B} \vDash_\rho \psi$ für alle $ \psi \in \Delta $.
+    \item $ \varphi $ ist \red{semantische Folgerung} von $ \Delta $ (\red{$ \Delta \vDash \varphi $}) falls für alle Strukturen $ \mathcal{B} $ und alle Variableninterpretationen $ \rho $ gilt
+    \[
+        (\mathcal{B} \vDash_\rho \psi, \forall \psi \in \Delta) ~\RA~ \mathcal{B} \vDash_\rho \varphi
+    \]
+    \item $ \varphi $ ist \red{allgemeingültig}, falls $ \mathcal{B} \vDash_\rho \varphi $ für alle Strukturen $ \mathcal{B} $ und alle Variableninterpretationen $ \rho $ gilt
+\end{itemize}
+\paragraph{Bemerkung}
+\[
+    \varphi \textnormal{ allgemeingültig} ~\Leftrightarrow~ \emptyset \vDash \varphi ~\Leftrightarrow~ \{\lnot \varphi\} \textnormal{ nicht erfüllbar}
+\]
+Hierfür schreiben wir auch $ \vDash \varphi $.
+
+\section{\blue{Substitutionen}}
+Eine \red{Substitution} besteht aus einer Variable $ x \in \texttt{Var} $ und einem Term $ t \in T_\Sigma $, geschrieben \red{$ [x := t] $}.\ls
+Die Formel $ \varphi[x:=t]  $ ist die Anwendung der Substitution $ [x:=t] $ auf die Formel $ \varphi $. Sie entsteht aus $ \varphi $, indem alle freien Vorkommen von $ x $ durch $ t $ ersetzt werden. \textit{Sie soll über $ t $ aussagen, was $ \varphi $ über $ x $ ausgesagt hat.}\ls
+Dazu wird induktiv defininiert, was es heißt, die freuen Vorkommen von $ x $ im Term $ s \in T_\Sigma $ zu ersetzen:
+\begin{itemize}
+    \item $ x[x:=t] = t $
+    \item $ y[x:=t] = t $ für $ y \in \texttt{Var}\setminus\{x\} $
+    \item $ (f(t_1,\dots,t_k))[x:=t] = f(t_1[x:=t],\dots,t_k[x:=t]) $ für $ f \in \Omega $ mit $ \texttt{ar}(f) = k $ und $ t_1,\dots,t_k \in T_\Sigma $
+\end{itemize}
+\subsection{\green{Lemma}}
+Seien $ \Sigma $ Signatur, $ \mathcal{A} $ Struktur, $ \rho $ Variableninterpretation, $ x \in \texttt{Var} $ und $ s,t \in T_\Sigma $. Dann gilt
+\[
+    \rho(s[x:=t]) = \rho[x \mapsto \rho(t)](s)
+\]
+\subsection{\blue{Definition Zulässigkeit}}
+Sei $ [x:=t] $ Substitution und $ \varphi $ Formel.\newline
+Die Substitution $ [x:=t] $ heißt \red{für $ \varphi $ zulässig}, wenn für alle $ y \in \texttt{Var} $ gilt
+\[
+    y \textnormal{ Variable in }t ~\RA~ \varphi \textnormal{ enthält weder } \exists y \textnormal{ noch } \forall y
+\]
+\subsection{\green{Lemma}}
+Sei $ \Sigma $ Signatur, $ \mathcal{A} $ Struktur, $ \rho $ Variableninterpretation, $ x \in \texttt{Var} $ und $ t \in T_\Sigma $. Ist die Substitution $ [x:=t] $ für die Formel $ \varphi $ zulässig, so gilt
+\[
+    \mathcal{A} \vDash_\rho \varphi[x:=t] ~\Leftrightarrow~ \mathcal{A} \vDash_{\rho[x \mapsto \rho(t)]} \varphi
+\]
+\section{\blue{Natürliches Schließen}}
+Die Regeln des natürlichen Schließens für aussagelogische Formeln sind auch anwendbar auf prädikatenlogische Formeln.
+\subsection{\green{Reflexivität}}
+Für jeden Term $ t $ ist
+\begin{prooftree}
+    \AxiomC{$  $}
+    \UnaryInfC{$ t = t $}
+\end{prooftree}
+eine hypothesenlose Deduktion mit Konklusion $ t =t  $
+\subsection{\green{Gleiches-Für-Gleiches}}
+\paragraph{Idee:} ''Zunächst zeige ich, dass $ s $ die Eigenschaft $ \varphi $ hat. Dann zeige ich, dass $ s = t $. Also habe ich gezeigt, dass $ t $ die Eigenschaft $ \varphi $ hat.''
+\begin{prooftree}
+    \AxiomC{$ \varphi[x:=s] $}
+    \AxiomC{$ s = t $}
+    \BinaryInfC{$ \varphi[x:=t] $}
+\end{prooftree}
+\paragraph{Bedingung:} Über keine Variable aus $ s $ oder $ t $ wird in $ \varphi $ quantifiziert.
+\subsection{\green{$ \forall $-Einführung/-Elimination}}
+\paragraph{Einführung:}
+\begin{prooftree}
+    \AxiomC{$ \varphi $}
+    \UnaryInfC{$ \forall x \varphi $}
+\end{prooftree}
+\paragraph{Bedingung:} $ x $ kommt in keiner Hypothese frei vor
+\paragraph{Elimination:}
+\begin{prooftree}
+    \AxiomC{$ \forall x \varphi $}
+    \UnaryInfC{$ \varphi[x := t] $}
+\end{prooftree}
+\paragraph{Bedingung:} Über keiner Variable aus $ t $ wird in $ \varphi $ quantifiziert
+\subsection{\green{$ \exists $-Einführung/-Elimination}}
+\paragraph{Einführung:}
+\begin{prooftree}
+    \AxiomC{$ \varphi[x:=t] $}
+    \UnaryInfC{$ \exists x \varphi $}
+\end{prooftree}
+\paragraph{Bedingung:} Über keine Variable $ t $ wird in $ \varphi $ quantifiziert.
+\paragraph{Elimination:}
+\begin{prooftree}
+    \AxiomC{$ \exists x \varphi $}
+    \AxiomC{$ [\varphi] $}
+    \noLine
+    \UnaryInfC{$ \vdots $}
+    \noLine
+    \UnaryInfC{$ \sigma $}
+    \BinaryInfC{$ \sigma $}
+\end{prooftree}
+\paragraph{Bedingung:} $ x $ kommt in den Hypothesen und in $ \sigma $ nicht frei vor
+
+\section{\blue{Vollständigkeit}}
+\subsection{\blue{Definition Konkretisierung}}
+Eine Menge $ \Delta $ von Formeln hat \red{Konkretisierungen}, wenn für alle $ \exists x \varphi \in \Delta $ ein variablenloser Term $ t $ existiert mit $ \varphi [x := t] \in \Delta$
+\subsection{\green{Satz}}
+Sei $ \Delta $ eine maximal konsistente Menge von $ \Sigma $-Formeln. Dann existiert eine Signatur $ \Sigma^+ \supseteq \Sigma $ und eine maximal konsistente Menge von $ \Sigma^+ $-Formeln mit Konkretisierungen, so dass $ \Delta \subseteq \Delta^+ $.
+\subsection{\green{Satz}}
+Sei $ \Delta^+ $ maximal konsistente Menge von $ \Sigma^+ $-Formeln mit Konkretisierungen. Dann ist $ \Delta^+ $ erfüllbar.
+\subsection{\green{Vollständigkeitssatz der Prädikatenlogik}}
+Sei $ \Gamma $ eine Menge von Formeln und $ \varphi $ eine Formel. Dann gilt
+\[
+    \Gamma \vDash \varphi ~\RA~ \Gamma \vdash \varphi
+\]
+Insbesondere ist jede allgemeingültige Formel ein Theorem.
+\paragraph{Bemerkung:} Dieser Satz ist im wesentlichen der Gödelsche Vollständigkeitssatz.
+\subsection{\green{Satz}}
+Sei $ \Gamma $ höchstens abzählbar unendliche und konsistente Menge von Formeln. Dann hat $ \Gamma $ ein höchsts abzählbar unendliches Modell.
+
+\section{\blue{Vollständigkeit und Korrektheit}}
+Seien $ \Gamma $ eine Menge von Formeln und $ \varphi $ eine Formel. Dann gilt
+\[
+    \Gamma \vdash \varphi ~\Leftrightarrow~ \Gamma \vDash \varphi
+\]
+Insbesondere ist eine Formel genau dann allgemeingültig, wenn sie ein Theorem ist.
+
+\subsection{\green{Folgerung 1: Kompaktheit}}
+Seien $ \Gamma $ eine u.U. unendliche Menge von Formeln und $ \varphi $ eine Formel mit $ \Gamma \vDash \varphi $. Dann existiert $ \Gamma' \subseteq \Gamma $ endlich mit $ \Gamma' \vDash \varphi $
+\subsection{\green{Kompaktheitssatz}}
+Sei $ \Gamma $ eine u.U unendliche Menge von Formeln. Dann gilt
+\[
+    \Gamma\textnormal{ erfüllbar} ~\Leftrightarrow~ \forall \Gamma' \subseteq \Gamma \textnormal{ endlich}: \Gamma' \textnormal{ erfüllbar}
+\]
+\subsection{\green{Satz}}
+Sei $ \Delta $ eine u.U. unendliche Menge von Formeln, so dass für jedes $ n \in \mathbb{N} $ eine endliche Struktur $ \mathcal{A}_n $ mit $ \mathcal{A}_n \vDash \Delta $ existiert, die wenigstens $ n $ Elemente hat.\ls
+Dann existiert eine unendliche Struktur $ \mathcal{A} $ mit $ \mathcal{A} \vDash \Delta $.
+\subsection{\green{Folgerung 2: Löwenheim-Skolem}}
+Sei $ \Gamma $ erfüllbare und höchstens abzählbar unendliche Menge von Formeln. Dann existiert ein höchstens abzählbar unendliches Modell von $ \Gamma $.
+\subsection{\green{Folgerung 3: Semi-Entscheidbarkeit}}
+Die Menge der allgemeingültigen Formeln ist semi-entscheidbar.
+
+\subsection{\blue{Definition Horn-Formel}}
+Eine \red{Horn-Formel} ist eine Konjuktion von Formeln der Form
+\[
+    \forall x_1 \forall x_2 \dots \forall x_n ((\lnot\perp \wedge \alpha_1 \wedge\dots \wedge \alpha_m) \ra \beta)
+\]
+wobei $ \alpha_1,\dots,\alpha_m  $ und $ \beta $ atomare Formeln sind.
+
+\section{\blue{Definition Elementare Theorie}}
+Sei $ \mathcal{A} $ eine Struktur. Dann ist $ \red{\texttt{Th}(\mathcal{A})} $ die Menge der prädikatenlogischen Formeln $ \varphi $ mit $ \mathcal{A} \vDash \varphi $. Diese Menge heißt die \red{(elementare Theorie von $ \mathcal{A} $)}.
+\subsection{\green{Satz}}
+Die Menge $ \texttt{Th}(\mathcal{N}) $ aller Sätze $ \varphi $ mit $ \mathcal{N} \vDash \varphi $ ist nicht entscheidbar.
+
+\section{\red{Semi-Entscheidungsverfahren für allgemeingültige Formeln}}
+\paragraph{Idee:}
+\begin{itemize}
+    \item Berechne aus Formel $ \psi $ eine Menge $ E $ von aussagelogischen Formeln mit
+    \[
+        E \textnormal{ unerfüllbar }  ~\RA~ \lnot \psi \textnormal{ unerfüllbar } ~\RA~ \psi \textnormal{ allgemeingültig}
+    \]
+    \item Suche endliche unerfüllbare Teilmenge $ E' $ von $ E $
+\end{itemize}
+\subsection{\blue{Definition Erfüllbarkeitsäquivalenz}}
+Zwei Formeln $ \varphi $ und $ \psi $ heißen \red{erfüllbarkeitsäquivalent},wenn gilt:
+\[
+    \varphi \textnormal{ erfüllbar } ~\RA~ \psi \textnormal{ erfüllbar}
+\]
+\subsection{\blue{Definition Gleichungsfreiheit}}
+Eine Formel ist \red{gleichungsfrei}, wenn sie keine Teilformel der Form $ s = t $ enthält.
+\paragraph{Notation:}
+\begin{itemize}
+    \item Sei $ \Sigma = (\Omega, \texttt{Rel}, \texttt{ar}) $ endliche Signatur und $ \varphi $ Formel
+    \item \red{$ \Sigma_{\texttt{Gl}} $}$ = (\Omega, \texttt{Rel} \uplus \{\texttt{Gl}\}, \texttt{ar}_{\texttt{Gl}}) $ mit $ \texttt{ar}_{\texttt{Gl}}(f) = \texttt{ar}(f)  $ für alle $ f \in \Omega \cup \texttt{Rel} $ und $ \texttt{ar}_{\texttt{Gl}}(\texttt{Gl}) = 2 $
+    \item Für eine Formel $ \varphi $ bezeichnet $ \varphi_{\texttt{Gl}} $ die $ \Sigma_{\texttt{Gl}} $-Formel, die aus $ \varphi $ entsteht, indem alle Vorkommen von Teilformeln $ s = t $ durch $ \texttt{Gl}(s,t) $ ersetzt werden
+\end{itemize}
+\section{\blue{Kongruenz und Äquivlenz}}
+
+\subsection{\blue{Definition Kongruenz}}
+Sei $ \mathcal{A} $ eine Struktur und $ \sim  $ eine binäre Relation auf $ U_\mathcal{A} $. Die Relation $ \sim $ heißt \red{Kongruenz auf $ \mathcal{A} $}, wenn gilt:
+\begin{itemize}
+    \item $ \sim $ ist eine Äquivalenzrelation (reflexiv, transitiv, symmetrisch)
+    \item fü alle $ f \in \Omega $ mit $ k = \texttt{ar}(f) $ und alle $ a_1, b_1,\dots,a_k,b_k \in U_\mathcal{A} $ gilt
+    \[
+        a_1 \sim b_1,~ a_2 \sim b_2,~ \dots ,~ a_k \sim b_k ~\RA~ f^\mathcal{A}(a_1,\dots,a_k) \sim f^\mathcal{A}(b_1,\dots,b_k)
+    \]
+    \item für alle $ R \in \texttt{Rel} $ mit $ k = \texttt{ar}(R) $ und alle $ a_1,b_1,\dots, a_k, b_k \in U_\mathcal{A}  $ gilt
+    \[
+        a_1 \sim b_1,~\dots,~a_k \sim b_k,~ (a_1,\dots,a_k) \in R^\mathcal{A} ~\RA~ (b_1,\dots,b_k) \in R^\mathcal{A}
+    \]
+\end{itemize}
+
+\subsection{\blue{Definition Äquivalenzklasse}}
+Sei $ \mathcal{A} $ eine Struktur und $ \sim $ eine Kongruenz auf $ \mathcal{A} $.
+\begin{itemize}
+    \item Für $ a \in U_\mathcal{A} $ sei \red{$ [a] $}$ = \{ b \in U_\mathcal{A} \mid a \sim b \} $ die \red{Äquivalenzklasse} von $ a $ bzgl. $ \sim $
+    \item Dann definieren wir den \red{Quotienten $ \mathcal{B} = \mathcal{A}/\sim  $} von $ \mathcal{A} $ bzgl. $ \sim $ wie folgt
+    \item[] \begin{itemize}
+        \item $ U_\mathcal{B} = U_\mathcal{A}/\sim = \{[a] \mid a \in U_\mathcal{A}\}  $
+        \item Für jedes $ f \in \Omega $ mit $ \texttt{ar}(f) = k $ und alle $  a_1,\dots,a_k \in U_\mathcal{A} $ setzen wir
+        \[
+            f^\mathcal{B}([a_1],\dots,[a_k]) = [f^\mathcal{A}(a_1,\dots,a_k)]
+        \]
+        \item Für jedes $ R \in \texttt{Rel} $ mit $ \texttt{ar}(R) = k $ setzen wir
+        \[
+            R^\mathcal{B} = \{([a_1],\dots,[a_k]) \mid (a_1,\dots,a_k) \in R^\mathcal{A}\}
+        \]
+    \end{itemize}
+    \item Sei $ \rho: \texttt{Var} \ra U_\mathcal{A} $ Variableninterpretation. Dann definiere die Variableninterpretation
+    \[
+        \red{\rho/\sim}: \texttt{Var} \ra U_\mathcal{B}: x \mapsto [\rho(x)]
+    \]
+\end{itemize}
+\subsection{\green{Lemma 1}}
+Sei $ \mathcal{A} $ Struktur, $ \rho: \texttt{Var} \ra U_\mathcal{A} $ Variableninterpretation und $ \sim $ Kongruenz. Seien weiter $ \mathcal{B} = \mathcal{A}/\sim $ und $ \rho_\mathcal{B} = \rho/\sim $. Dann gilt für jeden Term $ t $:
+\[
+    [\rho(t)] = \rho_\mathcal{B}(t)
+\]
+\subsection{\green{Lemma 2}}
+Sei $ \mathcal{A} $ Struktur, $ \sim $ Kongruenz und $ \mathcal{B} = A/\sim $. Dann gilt für alle $ R \in \texttt{Rel} $ mit $ k = \texttt{ar}(R) $ und alle $ c_1,\dots,c_k \in U_\mathcal{A} $:
+\[
+    ([c_1], \dots, [c_k]) \in R^\mathcal{B} ~\Leftrightarrow~ (c_1,\dots,c_k) \in R^\mathcal{A}
+\]
+\subsection{\green{Satz}}
+Seien $ \mathcal{A} $ $ \Sigma_\texttt{Gl} $-Struktur und $ \rho: \texttt{Var} \ra U_\mathcal{A} $ Variableninterpretation, so dass $ \sim = \texttt{Gl}^\mathcal{A} $ Kongruenz auf $ \mathcal{A}  $ ist.\ls
+Seien $ \mathcal{B} = A/\sim $ und $ \rho_\mathcal{B} = \rho/\sim $. Dann gilt für alle Formeln $ \varphi $:
+\[
+    A \vDash_\rho \varphi_\texttt{Gl} ~\RA~ \mathcal{B} \vDash_{\rho_\mathcal{B}} \varphi
+\]
+\subsection{\green{Lemma}}
+Aus einer endlichen Signatur $ \Sigma $ kann ein gleichungsfreier Horn-Satz $ \texttt{Kong}_\Sigma $ über $ \Sigma_\texttt{Gl} $ berechnet werden, so dass fü® alle $ \Sigma_\texttt{Gl} $-Strukturen $ \mathcal{A} $ gilt:
+\[
+    \mathcal{A} \vDash \texttt{Kong}_\Sigma ~\RA~ \texttt{Gl}^\mathcal{A} \textnormal{ ist eine Kongruenz}
+\]
+\subsection{\green{Satz}}
+Aus einer endlichen Signatur $ \Sigma $ und einer Formel $ \varphi $ kann eine gleichungsfreie und erfüllbarkeitsäquivalente $ \Sigma_\texttt{Gl} $-Formel $ \varphi' $ berechnet werden.\ls
+Ist $ \varphi $ Horn-Formel, so ist auch $ \varphi' $ Horn-Formel.
+
+\section{\blue{Skolemform}}
+\paragraph{Ziel:} Jede $ \Sigma $-Formel $ \varphi $ ist erfüllbarkeitsäquivalent zu einer $ \Sigma' $-Formel
+\[
+    \varphi' = \forall x_1 \forall x_2 \dots \forall x_k \psi
+\]
+wobei $ \psi $ keine Quantoren enthält, $ \varphi' $ heißt \red{in Skolemform}.
+\paragraph{Vorgehen:}
+\begin{itemize}
+    \item[(1)] Quantoren nach vorne (Pränexform)
+    \item[(2)] Existenzquantoren eliminieren
+\end{itemize}
+\paragraph{Bemerkung:} Es gibt Formeln ohne äquivlente Formel in Skolemform.
+
+\subsection{\blue{Äquivalenz von Formeln}}
+Zwei Formeln $ \varphi $ und $ \psi $ sind \red{äquivalent} (kurz $ \varphi \red{\equiv} \psi $), wenn für alle Strukturen $ A $ und alle Variableninterpretationen $ \rho $ gilt
+\[
+    \mathcal{A} \vDash_\rho \varphi ~\RA~ \mathcal{A} \vDash_\rho \psi
+\]
+\subsection{\green{Lemma}}
+Seien $ \Box \in \{\exists, \forall\} $ und $ \oplus \in \{\wedge, \vee, \ra, \leftarrow\} $. \newline
+Sei $ \varphi = (\Box x \alpha) \oplus \beta $ und sei $ y $ eine Variable, die weder in $ \alpha $ noch in $ \beta $ vorkommt. Dann gilt
+\[
+    \varphi \equiv \begin{cases}
+        \Box y (\alpha[x:=y] \oplus \beta) & \textnormal{ falls } \oplus \in \{\wedge, \vee, \Leftarrow\}\\
+        \forall y (\alpha[x:=y] \ra \beta) & \textnormal{ falls } \oplus = \ra,~ \Box = \exists\\
+        \exists y (\alpha[x := y] \ra \beta) & \textnormal{ falls } \oplus = \ra,~ \Box = \forall
+    \end{cases}
+\]
+\subsection{\green{Satz}}
+Aus einer endlichen Signatur $ \Sigma $ und einer Formel $ \varphi $ kann eine äquivalente Formel
+\[
+    \varphi' = \Box_1x_1\dots\Box_kx_k \psi
+\]
+berechnet werden. Eine Formel $ \varphi' $ dieser Form heißt \red{Pränexform}.\ls
+Ist $ \varphi $ gleichungsfrei, so ist auch $ \varphi' $ gleichungsfrei.
+
+\subsection{\red{Existenzquantoren eliminieren}}
+Sei $ \varphi = \forall x_1 \forall x_2\dots\forall x_m \exists y \psi $ Formel in Pränexform. Sei $ g \notin \Omega $ ein neues $ m $-stelliges Funktionssymbol.\ls
+Setze \red{$ \varphi' $}$ = \forall x_1 \forall x_2\dots \forall x_m \psi [y := g(x_1,\dots,x_m)] $.\ls
+Offensichtlich hat $ \varphi' $ einen Existenzquantor weniger als $ \varphi $. $ \varphi' $ ist außerdem keine $ \Sigma $-Formel, da $ g \notin \Omega $, sondern eine Formel über einer erweiterten Signatur.
+
+\subsection{\green{Lemma}}
+Die Formeln $ \varphi $ und $ \varphi' $ sind erfüllbarkeitsäquivalent.
+\subsection{\green{Satz}}
+Aus einer Formel $ \varphi $ kann man eine erfüllbarkeitsäquivalente Formel $ \bar{\varphi}  $ in Skolemform berechnen. \newline
+Ist $ \varphi $ gleichungsfrei, so auch $ \bar \varphi $.
+
+\section{\blue{Herbrand-Strukturen und Modelle}}
+Sei $ \Sigma = (\Omega, \texttt{Rel}, \texttt{ar})$ eine Signatur. Wir nehmen im folgenden an, dass $ \Omega $ mindestens ein Konstantensymbol enthält. \ls
+Das \red{Herbrand-Universum $  D(\Sigma) $} ist die Menge aller variablenfreien $ \Sigma $-Terme. \ls
+\paragraph{Beispiel:}
+\begin{align*}
+    & \Omega = \{b, f\} \qquad \texttt{ar}(b) = 0 \qquad \texttt{ar}(f) = 1\\
+    & D(\Sigma) = \{ b, f(b), f(f(b)), f(f(f(b))),\dots \}
+\end{align*}
+Eine $ \Sigma $-Struktur $ \mathcal{A} = (U_\mathcal{A}, (f^\mathcal{A})_{f \in \Omega}, (R^\mathcal{A})_{R \in \texttt{Rel}}) $ ist eine \red{Herbrand-Struktur}, wenn folgendes gilt
+\begin{itemize}
+    \item $ U_\mathcal{A} = D(\Sigma)  $
+    \item für alle $ f \in \Omega $ mit $ \texttt{ar}(f) = k $ und alle $ t_1,\dots,t_k \in D(\Sigma) $ ist
+    \[
+        f^\mathcal{A}(t_1,\dots,t_k) = f(t_1,\dots,t_k)
+    \]
+\end{itemize}
+Für jede Herbrand-Struktur $ \mathcal{A} $, alle Variableninterpretationen $ \rho $ und alle variablenfreien Terme $ t $ gilt dann $ \rho(t) = t $.\ls
+Ein \red{Herbrand-Modell} von $ \varphi $ ist eine \red{Herbrand-Struktur}, die gleichzeitig ein Modell von $ \varphi $ ist.
+
+\subsection{\green{Satz}}
+Sei $ \varphi $ eine gleichungsfreie Aussage in Skolemform. $ \varphi $ ist genau dann erfüllbar, wenn $ \varphi $ ein Herbrand-Modell besitzt.
+
+\subsection{\blue{Herband-Expansion}}
+\paragraph{Frage:} Wie erkennt man, ob eine gleichungsfreie Aussage in Skolemform ein Herband-Modell hat?\ls
+Die \red{Herbrand-Expansion} von $ \varphi $ ist die Menge der Aussagen
+\[
+    E(\varphi) = \{ \psi[y_1 := t_1]\dots[y_n := t_n] \mid t_1,\dots,t_n \in D(\Sigma) \}
+\]
+Die Formeln von $ E(\varphi) $ entstehen also aus $ \psi $, in dem die (variablenfreien) Terme aus $ D(\Sigma) $ in jeder möglichen Weise in $ \psi $ substituiert werden. \ls
+Wir betrachen die Herbrand-Expansion von $ \varphi $ als eine Menge von \red{aussagelogischen Formeln}. Die atomaren Formeln sind hierbei von der Gestallt $ (P(t_1,\dots,t_k) $ für $ P \in \texttt{Rel} $ mit $ \texttt{ar}(P) = k $ und $ t_1,\dots,t_k \in D(\Sigma) $.
+
+\subsection{\red{Konstruktion}}
+Sei $ \mathcal{B}: \{P(t_1,\dots,t_k) \mid P \in \texttt{Rel}, k = \texttt{ar}(P), t_1,\dots,t_k \in D(\Sigma)\} \ra \mathbb{B} $ eine $ \mathbb{B}-Belegung $.
+Die hiervon \red{induzierte Herbrand-Struktur $ \mathcal{A}_\mathcal{B} $} ist gegeben durch
+\[
+    P^{\mathcal{A}_\mathcal{B}} = \{ (t_1,\dots,t_k) \mid t_1,\dots,t_k \in D(\Sigma), \mathcal{B}(P(t_1,\dots,t_k)) = 1 \}
+\]
+für alle $ P \in \texttt{Rel} $ mit $ \texttt{ar}(P) =k$
+\subsection{\green{Lemma}}
+Für jede quantoren- und gleichungsfreie Aussage $ \alpha $ und jede Variableninterpretation $ \rho $ in $ \mathcal{A}_\mathcal{B} $ gilt
+\[
+    \mathcal{A}_\mathcal{B} \vDash_\rho \alpha ~\RA~ \mathcal{B}(\alpha) = 1
+\]
+\subsection{\green{Lemma}}
+Sei $ \varphi = \forall y_1 \forall y_2 \dots \forall y_n \psi $ gleichungsfreie Aussage in Skolemform. Sie hat genau dann ein Herbrand-Modell, wenn die Formelmenge $ E(\varphi) $ (im aussagelogischen Sinn) erfüllbar ist.
+
+\subsection{\green{Satz von Gödel-Herbrand-Skolem}}
+Sei $ \varphi $ gleichungsfreie Aussage in Skolemform. Die ist genau dann erfüllbar, wenn die Formelmenge $ E(\varphi) $ (im aussagelogischen Sinn) erfüllbar ist.
+
+\subsection{\green{Satz von Herbrand}}
+Eine gleichungsfreie Aussage $ \varphi $ in Skolemform ist genau dann unerfüllbar, wenn es eine endliche Teilmenge von $ E(\varphi) $ gibt, die (im aussagelogischen Sinn) unerfüllbar ist.
+
+\subsection{\red{Algorithmus von Gilmore}}
+Sei $ \varphi $ gleichungsfreie Aussage in Skolemform un sei $ \alpha_1,\alpha_2,\dots $ eine Aufzählung von $ E(\varphi) $.
+\paragraph{Algorithmus von Gilmore}
+\begin{itemize}
+    \item[] \textbf{Eingabe:} $ \varphi $
+    \item[] $ n:=0 $
+    \item[] \texttt{repeat} $ n:= n+1 $
+    \item[] \texttt{until} $ \{ \alpha_1,\alpha_2,\dots,\alpha_n \} $ ist unerfüllbar
+    \item[] \texttt{return} ''unerfüllbar''
+\end{itemize}
+\paragraph{Bemerkung:} ''$ \{ \alpha_1,\alpha_2,\dots,\alpha_n \} $ ist unerfüllbar'' ist nachzuweisen mit den Mitteln der Aussagenlogik, z.B. Wahrheitswertetabelle.
+
+\paragraph{Folgerung}
+Sei $ \varphi $ eine gleichungsfreie Aussage in Skolemform. Dann gilt:
+\begin{itemize}
+    \item Wenn die Eingabeformel $ \varphi $ unerfüllbar ist, dann terminiert der Algorithmus und gibt ''unerfüllbar'' aus.
+    \item Wenn die Eingabeformel $ \varphi $ erfüllbar ist, dann terminiert der Algorithmus nicht.
+\end{itemize}
+\subsection{\green{Bestimmung von Lösungen}}
+\paragraph{Folgerung 1:} Sei $ \varphi = \bigwedge_{1 \leq i \leq n} \varphi_i $ gleichungsfreie Horn-Formel der Prädikatenlogik. Dann ist $ \varphi $ genau dann unerfüllbar, wenn $ \bigcup_{1 \leq i \leq n} E(\varphi_i)$ im aussagelogischen Sinne unerfüllbar ist.
+\paragraph{Folgerung 2:} Eine gleichungsfreie Horn-Formel der Prädikatenlogik $ \varphi = \bigwedge_{1 \leq i \leq n} \varphi_i $ ist genau dann unerfüllbar, wenn es eine SLD-Resolution
+\[
+    (M_0 \ra \perp, M_1 \ra \perp,\dots, M_m \ra \perp)
+\]
+aus $ \bigcup_{1 \leq i \leq n}E(\varphi_i) $ mit $ M_m = \emptyset $ gibt.
+
+\section{\blue{Substitutionen}}
+Eine \red{verallgemeinerte Substitution} $ \sigma $ ist eine Abbildung der Menge der Variablen in die Menge aller Terme, so dass nur endlich viele Variablen $ x $ existeren mit $ \sigma(x) \neq x$.\ls
+Sei \red{$ \texttt{Def}(\sigma) $}$ = \{ x \textnormal{ Variable } \mid x \neq \sigma(x) \} $ der \red{Definitionsbereich} der verallgemeinerten Substitution $ \sigma $.
+Für einen Term $ t $ definieren wir den Term $ \red{t \sigma} $ (Anwendung der verallgemeinerten Substitution $ \sigma $ auf den Term $ t $) wie folgt induktiv
+\begin{itemize}
+    \item $ x \sigma = \sigma(x) $
+    \item $ [f(t_1,\dots,t_k)]\sigma = f(t_1\sigma,\dots,t_k \sigma $ für Terme $ t_1,\dots,t_k, f \in \Omega $
+\end{itemize}
+Für eine atomare Formel $ \alpha = P(t_1,\dots, t_k) $ (d.h. $ P \in \texttt{Rel}, \texttt{ar}(P) =k, t_1,\dots,t_k $ Terme ) sei
+\[
+    \red{\alpha \sigma} = P(t_1 \sigma,\dots, t_k \sigma)
+\]
+\subsection{\blue{Verknüpfung von Substitutionen}}
+Sind $ \sigma_1, \sigma_2 $ verallgemeinerte Substitutionen, so definieren wir eine neue verallgemeinerte Substitution \red{$ \sigma_1 \sigma_2 $} durch
+\[
+    (\sigma_1 \sigma_2)(x) = (x\sigma_1)\sigma_2
+\]
+\subsection{\green{Lemma}}
+Seien $ \sigma $ Substitution, $ x $ Variable und $ t $ Term, so dass
+\begin{itemize}
+    \item $ x \notin \texttt{Def}(\sigma) $
+    \item $ x $ kommt in keinem der Terme $ y \sigma $ mit $ y \in \texttt{Def}(\sigma) $ vor
+\end{itemize}
+Dann gilt
+\[
+    [x:=t]\sigma = \sigma[x:=t\sigma]
+\]
+\subsection{\blue{Unifikator}}
+Gegeben seien zwei gleichungsfreie Atomformeln $ \alpha, \beta $. Eine Substitution $ \sigma $ heißt \red{Unifikator} von $ \alpha $ und $ \beta $, falls
+\[
+    \alpha\sigma = \beta\sigma
+\]
+Ein Unifikator $ \sigma $ heißt \red{allgemeinster Unifikator}, falls für jeden Unifikator $ \sigma' $ eine Substitution $ \tau $ mit $ \sigma' = \sigma \tau $ existiert.
+
+\subsection{\blue{Variablenumbenennung}}
+Eine \red{Variablenumbenennung} ist eine Substitution $ \rho $, die $ \texttt{Def}(\rho) $ injektiv in die Menge der Variablen abbildet.
+\subsection{\green{Lemma}}
+Sind $ \sigma_1, \sigma_2 $ allgemeinste Unifikatoren von $ \alpha, \beta $, so existiert eine Variablenumbenennung $ \rho $ mit $\sigma_2 = \sigma_1 \rho$.
+
+\subsection{\red{Unifikationsalgorithmus}}
+\begin{itemize}
+    \item[\textbf{Eingabe: }] Paar $ (\alpha,\beta) $ gleichungsfreier Atomformeln
+    \item[] $ \sigma := $ Substitution mit $ \texttt{Def}(\sigma) = \emptyset$ (d.h. Identität)
+    \item[\textbf{while }] $ \alpha \sigma \neq \beta \sigma $ \textbf{do}
+    \item[] \begin{itemize}
+        \item[] Suche die erste Position, an der sich $ \alpha\sigma $ und $ \beta\sigma $ unterscheiden
+        \item[\textbf{if }] keines der beiden Symbole an dieser Position ist eine Variable
+        \item[\textbf{then }] stoppe mit ''nicht unifizierbar''
+        \item[\textbf{else }] sei $ x $ die Variable und $ t $ der term in der anderen Atomformel
+        \item[] \begin{itemize}
+            \item[\textbf{if }] $ x $ kommt in $ t $ vor
+            \item[\textbf{then }] stoppe mit ''nicht unifizierbar''
+            \item[\textbf{else }] $ \sigma := \sigma[x:=t] $
+        \end{itemize}
+    \end{itemize}
+    \item[\textbf{endwhile}]
+    \item[\textbf{Ausgabe: }]$ \sigma $
+\end{itemize}
+\subsection{\green{Satz}}
+\begin{itemize}
+    \item Der Unifikationsalgorithmus terminiert für jede Eingabe
+    \item Wenn die Eingabe nicht unifizierbar ist, so terminiert der Algorithmus mit der Ausgabe ''nicht unifizierbar''
+    \item wenn die Eingabe unifizierbar ist, dann findet der Algorithmus den allgemeinsten Unifikator
+\end{itemize}
+
+\section{\red{Prädikatenlogische SLD-Resolution}}
+Sei $ \Gamma $ eine Menge von gleichungsfreien Horn-Klauseln der Prädikatenlogik. Eine \red{SLD-Resolution aus $ \Gamma $} ist eine Folge
+\[
+    ((M_0 \ra \perp, \sigma_0), (M_1 \ra \perp, \sigma_1),\dots, (M_m \ra \perp, \sigma_m))
+\]
+von Horn-Klauseln und Substitutionen mit
+\begin{itemize}
+    \item $ (M_0 \ra \perp) \in \Gamma $ und $ \texttt{Def}(\sigma_0) = \emptyset $
+    \item für alle $ 0 \leq n < m $ existieren $ \emptyset \neq Q \subseteq M_n,~ (N \ra \alpha) \in \Gamma $ und Variablenumbenennung $ \rho $, so dass
+    \item \begin{itemize}
+        \item $ (N \cup \{\alpha\}) \rho $ und $ M_n $ variablendisjunkt
+        \item $ \sigma_{n+1} \textnormal{ ein allgemeinster Unifikator von } \alpha \rho $ und $ Q $
+        \item $ M_{n+1} = (M_n \setminus Q \cup N \rho) \sigma_{n+1} $
+    \end{itemize}
+\end{itemize}
+\subsection{\green{Lemma}}
+Sei $ \Gamma $ die Menge von gleichungsfreien Horn-Klauseln der Prädikatenlogik und $ ((M_n \ra \perp, \sigma_n))_{0 \leq n \leq m} $ eine SLD-Resolution aus $ \Gamma \cup \{M_0 \ra \perp\} $ mit $ M_m = \emptyset $.\newline
+Dann gilt $ \Gamma \vDash \psi \sigma_0\sigma_1\sigma_2\dots\sigma_m $ für alle $ \psi \in M_0 $.
+\subsection{\green{Lemma}}
+Sei $ \Gamma $ eine Menge von definiten gleichungsfreien Horn-Klauseln der Prädikatenlogik, sei $ M \ra \perp $ eine gleichungsfreie Horn-Klausel und sei $ \upsilon $ Substitution, so dass $ M \upsilon $ variablenlos ist und $ \Gamma \vDash M \upsilon $ gilt.\newline
+Dann existiert eine prädikatenlogische SLD-Resolution
+\[
+    ((M_n \ra \perp, \sigma_n))_{0 \leq n \leq m} \textnormal{ aus } \Gamma \cup \{M \ra \perp\}
+\]
+und eine Substitution $ \tau $ mit
+\[
+    M_0 = M, M_m = \emptyset \textnormal{ und } M_0\sigma_0\sigma_1\dots\sigma_m \tau = M\upsilon
+\]
+\subsection{\green{Satz}}
+Sei $ \Gamma $ eine Menge von definiten gleichungsfreien Horn-Klauseln der Prädikatenlogik, sei $ M \ra \perp $ eine gleichungsfreie Horn-Klausel und sei $ \upsilon $ Substitution, so dass $ M \upsilon $ variablenlos ist. Dann sind äquivlent:
+\begin{itemize}
+    \item $ \Gamma \vDash M \upsilon $
+    \item Es existiert eine SLD-Resolution $ ((M_n \ra \perp, \sigma_n))_{0 \leq n \leq m} \textnormal{ aus } \Gamma \cup \{M \upsilon \ra \perp\} $ und eine Substitution $ \tau $ mit $ M_0 = M, M_m = \emptyset $ und $ M_0\sigma_0\sigma_1\dots\sigma_m \tau = M\upsilon $
+\end{itemize}
+
+\end{document}
